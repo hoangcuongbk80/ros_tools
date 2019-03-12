@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="reconstruction_error" pkg="ros_tools" type="reconstruction_error_node" cwd="node">
+  <param name="error_max" value="12"/>
+  <param name="X_Rot" value="0"/>
+  <param name="Y_Rot" value="0"/>
+  <param name="Z_Rot" value="1"/>
+  <param name="X_Rot_Inv" value="0"/>
+  <param name="Y_Rot_Inv" value="0"/>
+  <param name="Z_Rot_Inv" value="-0.95"/>
+  <param name="source_dir" value="/home/hoang/Orebro-Study/Experiments/IROS-2019/ycb-reconstruction/0007_objects.ply"/>
+  <param name="target_dir" value="/home/hoang/Orebro-Study/Experiments/IROS-2019/ycb-reconstruction/0007.ply"/>
+  </node>
+</launch>
