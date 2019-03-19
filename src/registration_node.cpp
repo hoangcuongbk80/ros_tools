@@ -31,37 +31,7 @@ using namespace std;
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr  source_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr  target_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
 
-bool threePointToPlane(pcl::PointCloud<pcl::PointXYZ> &input, double &a, double &b, double &c, double &d)
-{
-	if (input.size() < 3) return false;
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::copyPointCloud(input, *cloud);
-
-	pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
-	pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
-	// Create the segmentation object
-	pcl::SACSegmentation<pcl::PointXYZ> seg;
-	// Optional
-	seg.setOptimizeCoefficients(true);
-	// Mandatory
-	seg.setModelType(pcl::SACMODEL_PLANE);
-	seg.setMethodType(pcl::SAC_RANSAC);
-	seg.setDistanceThreshold(0.1);
-	seg.setInputCloud(cloud);
-	seg.segment(*inliers, *coefficients);
-
-	if (inliers->indices.size() == 0) return false;
-	else
-	{
-		a = coefficients->values[0];
-		b = coefficients->values[1];
-		c = coefficients->values[2];
-		d = coefficients->values[3];
-		return true;
-	}
-}
-
-void remove_overlap(pcl::PointCloud<pcl::PointXYZRGB> &source, pcl::PointCloud<pcl::PointXYZRGB> &target, double thresh)
+void remove_overlap(pcl::PointCloud<pcl::PointXYZRGB> &source, pcl::PointCloud<pcl::PointXYZRGB> &target, double thresh, int num_neighbors)
 {
 	if (source.size() == 0 || target.size() == 0) return;
 	pcl::PointCloud<pcl::PointXYZ>::Ptr source_cloud(new pcl::PointCloud<pcl::PointXYZ>);
@@ -71,25 +41,19 @@ void remove_overlap(pcl::PointCloud<pcl::PointXYZRGB> &source, pcl::PointCloud<p
 
 	pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
 	kdtree.setInputCloud(target_cloud);
-	std::vector<int> pointIdxNKNSearch(3);
-	std::vector<float> pointNKNSquaredDistance(3);
+	std::vector<int> pointIdxNKNSearch(num_neighbors);
+	std::vector<float> pointNKNSquaredDistance(num_neighbors);
 
-	double dist;
 	for (int i = 0; i < source.size(); ++i)
 	{
+		double dist = 0;;
 		if (kdtree.nearestKSearch(source_cloud->points[i], 3, pointIdxNKNSearch, pointNKNSquaredDistance) > 0)
 		{
-			/* pcl::PointCloud<pcl::PointXYZ>::Ptr plane_cloud(new pcl::PointCloud<pcl::PointXYZ>);
-			for (int k = 0; k < 3; k++)
+			for(int j=0; j < num_neighbors; j++)
 			{
-				plane_cloud->push_back(target_cloud->points[pointIdxNKNSearch[k]]);
+				dist += sqrt(pointNKNSquaredDistance[j]);
 			}
-			double a, b, c, d;
-			if (threePointToPlane(*plane_cloud, a, b, c, d))
-			{
-				dist = pcl::pointToPlaneDistance(source.points[i], a, b, c, d);
-			}
-			else */ dist = sqrt(pointNKNSquaredDistance[0]);
+			dist = (double) dist / num_neighbors;
       		if(dist > thresh) target.push_back(source.points[i]);
 		}
 	}
@@ -106,6 +70,7 @@ int main(int argc, char **argv)
 
   std::string source_path, target_path, saved_path; 
   double neighbor_dist;
+  int num_neighbors;
   std::vector<float> translation;
   std::vector<float> rot_quaternion;
 
@@ -114,6 +79,7 @@ int main(int argc, char **argv)
   nh_.getParam("target_path", target_path);
   nh_.getParam("saved_path", saved_path);
   nh_.getParam("neighbor_dist", neighbor_dist);
+  nh_.getParam("num_neighbors", num_neighbors);
   nh_.getParam("translation", translation);
   nh_.getParam("rot_quaternion", rot_quaternion);
 
@@ -124,7 +90,7 @@ int main(int argc, char **argv)
   Eigen::Quaternionf a(rot_quaternion[0], rot_quaternion[1], rot_quaternion[2], rot_quaternion[3]);
   pcl::transformPointCloud(*source_cloud, *source_cloud, b, a);
 
-  remove_overlap(*source_cloud, *target_cloud, neighbor_dist);
+  remove_overlap(*source_cloud, *target_cloud, neighbor_dist, num_neighbors);
   //*target_cloud += *source_cloud;
 
   pcl::PCLPointCloud2 cloud_filtered;
