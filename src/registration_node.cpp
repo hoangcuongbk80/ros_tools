@@ -47,7 +47,7 @@ void remove_overlap(pcl::PointCloud<pcl::PointXYZRGB> &source, pcl::PointCloud<p
 	for (int i = 0; i < source.size(); ++i)
 	{
 		double dist = 0;;
-		if (kdtree.nearestKSearch(source_cloud->points[i], 3, pointIdxNKNSearch, pointNKNSquaredDistance) > 0)
+		if (kdtree.nearestKSearch(source_cloud->points[i], num_neighbors, pointIdxNKNSearch, pointNKNSquaredDistance) > 0)
 		{
 			for(int j=0; j < num_neighbors; j++)
 			{
