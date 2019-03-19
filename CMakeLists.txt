@@ -156,6 +156,7 @@ include_directories(
 add_executable(read_rgbd_node src/read_rgbd_node.cpp)
 add_executable(draw_OBB_node src/draw_OBB_node.cpp)
 add_executable(reconstruction_error_node src/reconstruction_error_node.cpp)
+add_executable(registration_node src/registration_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -175,6 +176,7 @@ add_executable(reconstruction_error_node src/reconstruction_error_node.cpp)
 target_link_libraries(read_rgbd_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(draw_OBB_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(reconstruction_error_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(registration_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 #############
 ## Install ##

@@ -24,7 +24,6 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr  myCloud (new pcl::PointCloud<pcl::PointX
 pcl::PointCloud<pcl::PointXYZ>::Ptr     OBBs (new pcl::PointCloud<pcl::PointXYZ>);
 visualization_msgs::MarkerArray         multiMarker;
 std::vector<string>                     ObjectNameList;
-std::string                             *objectName;
 std::vector<int>                        recognizedObjects;
 
 int OBB_Estimation()
@@ -99,11 +98,11 @@ int OBB_Estimation()
     *OBBs += *OBB_Origin;
     OBB_points.x = lengthOBB[0]; OBB_points.y = lengthOBB[1]; OBB_points.z = lengthOBB[2];
     OBBs->push_back(OBB_points);
-    std::cerr << "OBB length: " << lengthOBB[0] << " " << lengthOBB[1] << " " << lengthOBB[2];
+    std::cerr << "OBB length: " << lengthOBB[0] << " " << lengthOBB[1] << " " << lengthOBB[2] << "\n";
     return 1;
 }
 
-void draw_OBBs()
+void draw_OBBs(std::vector<std::string> objects_name)
 {
     visualization_msgs::Marker OBB;
     geometry_msgs::Point p;
@@ -136,7 +135,6 @@ void draw_OBBs()
     ObjectName.pose.orientation.w = 1.0;
     ObjectName.scale.x = 0.15; ObjectName.scale.y = 0.15; ObjectName.scale.z = 0.15;
     ObjectName.color.r = 0.0f; ObjectName.color.g = 0.0f; ObjectName.color.b = 1.0f; ObjectName.color.a = 1.0;
-    std::cerr << "\n" << "cuong" << "\n";
 
     if(OBBs->size() == 0) 
     { 
@@ -236,12 +234,12 @@ void draw_OBBs()
        
        ostringstream convert;
        convert << k;
-       ObjectName.ns = objectName[recognizedObjects[k]] + convert.str();
+       ObjectName.ns = objects_name[recognizedObjects[k]] + convert.str();
        ObjectName.pose.position.x = OBBs->points[begin + k].x;
        ObjectName.pose.position.y = OBBs->points[begin + k].y;
        ObjectName.pose.position.z = OBBs->points[begin + k].z;
        ObjectName.color.a = 1.0;
-       ObjectName.text = objectName[recognizedObjects[k]];
+       ObjectName.text = objects_name[recognizedObjects[k]];
        ObjectNameList.push_back(ObjectName.text);
 
        std::cerr << ObjectName.text << "\n";
@@ -258,113 +256,94 @@ void colorMap(int i, pcl::PointXYZRGB &point)
 {
   if (i == 1) // red  
   {
-    point.r = 255;
+    point.r = 255; point.g = 0; point.b = 0; 
   }
   else if (i == 2) //line
   {
-    point.g = 255;
+    point.r = 0; point.g = 255; point.b = 0;
   }
   else if ( i == 3) //blue
   { 
-    point.b = 255;
+    point.r = 0; point.g = 0; point.b = 255;
   } 
   else if ( i == 4) //maroon
   {
-    point.r = 128;
+    point.r = 128; point.g = 0; point.b = 0;
 
   }
   else if ( i == 5) //green
   {
-    point.g = 128;
+    point.r = 0; point.g = 128; point.b = 0;
   }  
   else if ( i == 6) //navy
   {
-      point.b = 128;
+    point.r = 0; point.g = 0; point.b = 128;
   }
   else if ( i == 7) //yellow
   {
-    point.r = 255;
-    point.g = 255;
+    point.r = 255; point.g = 255; point.b = 0;
   }
   else if ( i == 8) //magenta
   {
-    point.r = 255;
-    point.b = 255;
+    point.r = 255; point.g = 0; point.b = 255;
   }
   else if ( i == 9) //cyan
   {
-    point.g = 255;
-    point.b = 255;
+    point.r = 0; point.g = 255; point.b = 255;
   }    
   else if ( i == 10) //olive
   {
-    point.r = 128;
-    point.g = 128;
+    point.r = 128; point.g = 128; point.b = 0;
   }
   else if ( i == 11) //purple
   {
-    point.r = 128;
-    point.b = 128;
+    point.r = 128; point.g = 0; point.b = 128;
   } 
     
   else if ( i == 12) //teal
   {
-    point.g = 128;
-    point.b = 128;
+    point.r = 0; point.g = 128; point.b = 128;
   }
     
   else if ( i == 13) 
   {
-    point.r = 92;
-    point.g = 112;
-    point.b = 92;
+    point.r = 92; point.g = 112; point.b = 92;
   }
   else if ( i == 14) //brown
   {
-      point.r = 165;
-      point.g = 42;
-      point.b = 42;
+    point.r = 165; point.g = 42; point.b = 42;
   }    
   else //silver
   {
-    point.r = 192;
-    point.g = 192;
-    point.b = 192;
+    point.r = 192; point.g = 192; point.b = 192;
   }                   
-      
 }
 
-void loadPointCloud(int i)
+void colorPointCloud(pcl::PointCloud<pcl::PointXYZRGB> &cloud, int i)
 {
-  recognizedObjects.push_back(i);
-  std::string filename; 
-  filename = "/home/hoang/Datasets/office-iros/" + std::to_string(i+1) + ".ply";
-  pcl::io::loadPLYFile<pcl::PointXYZRGB> (filename, *cloud);
+  for(int k=0; k < cloud.size(); k++)
+  {
+    colorMap(i+1, cloud.points[k]);
+  }
+}
+
+void loadPointCloud(std::string data_dir, std::string object_name)
+{
+  std::string data_path = data_dir + object_name + ".ply";
+  pcl::io::loadPLYFile<pcl::PointXYZRGB> (data_path, *cloud);
   
-   Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
+  Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
   transform_2.translation() << 1, 0.0, 1.0;
   transform_2.rotate (Eigen::AngleAxisf (-2, Eigen::Vector3f::UnitX()));
   pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
   pcl::transformPointCloud (*cloud, *cloud, transform_2);
-  
   OBB_Estimation();
-  for(int k=0; k<cloud->size(); k++)
-  {
-    pcl::PointXYZRGB point;
-    point.x = cloud->points[k].x;
-    point.y = cloud->points[k].y;
-    point.z = cloud->points[k].z;
-    point.r=0; point.b=0; point.g=0;
-    colorMap(i+1, point);
-    myCloud->push_back(point);
-  }
-  std::cerr << "myCloud: " << myCloud->size() << "\n";
 }
 
 void loadBackGround()
 {
   std::string filename; 
-  filename = "/home/hoang/Datasets/office-iros/background.ply";
+  filename = "/home/hoang/datasets_online/office-iros/background.ply";
   pcl::io::loadPLYFile<pcl::PointXYZRGB> (filename, *cloud);
   
   Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
@@ -380,6 +359,7 @@ void loadBackGround()
     point.y = cloud->points[k].y;
     point.z = cloud->points[k].z;
     point.r=192; point.b=192; point.g=192;
+    //myCloud->push_back(point);
     myCloud->push_back(cloud->points[k]);
   }
 }
@@ -387,26 +367,31 @@ void loadBackGround()
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "OBB_Drawer");
-  ros::NodeHandle cloud_n;
-  ros::NodeHandle obb_n;
+  std::cerr << "\n"<< "---------------------OBB Drawer---------------------" << "\n";
+  ros::NodeHandle nh_, cloud_n, obb_n;
   ros::Publisher cloud_pub = cloud_n.advertise<sensor_msgs::PointCloud2> ("myCloud", 1);
   ros::Publisher OBBs_pub = obb_n.advertise<visualization_msgs::MarkerArray>( "OBBs", 1);
   ros::Rate loop_rate(10);
 
-  int numOfObjects = 11; 
-  objectName = new std::string[numOfObjects];
-  objectName[0] = "Chair_01";  objectName[1] = "Chair_02"; 
-  objectName[2] = "Chair_03";  objectName[3] = "Chair_04"; 
-  objectName[4] = "Laptop_01";  objectName[5] = "Monitor_01"; 
-  objectName[6] = "Monitor_02";  objectName[7] = "Monitor_03";
-  objectName[8] = "Keyboard_01";  objectName[9] = "Keyboard_02"; 
-  objectName[10] = "Keyboard_03";
-  loadBackGround();
-  for(int i=0; i<10; i++)
+  std:string data_dir;
+  std::vector<std::string> objects_name;
+  bool load_background, color_segment;
+
+  nh_ = ros::NodeHandle("~");
+  nh_.getParam("data_dir", data_dir);
+  nh_.getParam("objects_name", objects_name);
+  nh_.getParam("color_segment", color_segment);
+  nh_.getParam("load_background", load_background);
+  
+  if(load_background) loadBackGround();
+  for(int i=0; i < objects_name.size(); ++i)
   {
-    loadPointCloud(i);
+    recognizedObjects.push_back(i); 
+    loadPointCloud(data_dir, objects_name[i]);
+    if(color_segment) colorPointCloud(*cloud, i);
+    *myCloud += *cloud;
   }
-  draw_OBBs();
+  draw_OBBs(objects_name);
 
   pcl::PCLPointCloud2 cloud_filtered;
   sensor_msgs::PointCloud2 output;
