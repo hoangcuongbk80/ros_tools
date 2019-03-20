@@ -23,6 +23,7 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/sample_consensus/sac_model_plane.h>
 #include <pcl/common/geometry.h>
+#include <pcl/registration/icp.h>
 
 #include <cmath>
 
@@ -30,14 +31,22 @@ using namespace std;
 
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr  source_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
 pcl::PointCloud<pcl::PointXYZRGB>::Ptr  target_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr  pub_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
 
 void remove_overlap(pcl::PointCloud<pcl::PointXYZRGB> &source, pcl::PointCloud<pcl::PointXYZRGB> &target, double thresh, int num_neighbors)
 {
 	if (source.size() == 0 || target.size() == 0) return;
 	pcl::PointCloud<pcl::PointXYZ>::Ptr source_cloud(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr target_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr ICP_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+
 	pcl::copyPointCloud(source, *source_cloud);
 	pcl::copyPointCloud(target, *target_cloud);
+
+/*   pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
+  icp.setInputSource(source_cloud);
+  icp.setInputTarget(target_cloud);
+  icp.align(*ICP_cloud); */
 
 	pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
 	kdtree.setInputCloud(target_cloud);
@@ -54,7 +63,14 @@ void remove_overlap(pcl::PointCloud<pcl::PointXYZRGB> &source, pcl::PointCloud<p
 				dist += sqrt(pointNKNSquaredDistance[j]);
 			}
 			dist = (double) dist / num_neighbors;
-      		if(dist > thresh) target.push_back(source.points[i]);
+      		if(dist > thresh) 
+          {
+            target.push_back(source.points[i]);
+            source.points[i].r = 0;
+            source.points[i].g = 255;
+            source.points[i].b = 0;
+            pub_cloud->push_back(source.points[i]);
+          }
 		}
 	}
 
@@ -71,6 +87,7 @@ int main(int argc, char **argv)
   std::string source_path, target_path, saved_path; 
   double neighbor_dist;
   int num_neighbors;
+  double icp_dist_max;
   std::vector<float> translation;
   std::vector<float> rot_quaternion;
 
@@ -80,24 +97,33 @@ int main(int argc, char **argv)
   nh_.getParam("saved_path", saved_path);
   nh_.getParam("neighbor_dist", neighbor_dist);
   nh_.getParam("num_neighbors", num_neighbors);
+  nh_.getParam("icp_dist_max", icp_dist_max);
   nh_.getParam("translation", translation);
   nh_.getParam("rot_quaternion", rot_quaternion);
 
   pcl::io::loadPLYFile<pcl::PointXYZRGB> (source_path, *source_cloud);
   pcl::io::loadPLYFile<pcl::PointXYZRGB> (target_path, *target_cloud);
+  *pub_cloud += *target_cloud;
 
+  // Coarse Registration
   Eigen::Vector3f b(translation[0], translation[1], translation[2]);
   Eigen::Quaternionf a(rot_quaternion[0], rot_quaternion[1], rot_quaternion[2], rot_quaternion[3]);
   pcl::transformPointCloud(*source_cloud, *source_cloud, b, a);
+  // Fine Registration
+  pcl::IterativeClosestPoint<pcl::PointXYZRGB, pcl::PointXYZRGB> icp;
+  icp.setMaxCorrespondenceDistance (icp_dist_max);
+  icp.setInputSource(source_cloud);
+  icp.setInputTarget(target_cloud);
+  icp.align(*source_cloud);
 
   remove_overlap(*source_cloud, *target_cloud, neighbor_dist, num_neighbors);
   //*target_cloud += *source_cloud;
 
   pcl::PCLPointCloud2 cloud_filtered;
   sensor_msgs::PointCloud2 output;
-  target_cloud->header.frame_id = "camera_depth_optical_frame";
+  pub_cloud->header.frame_id = "camera_depth_optical_frame";
   pcl::io::savePLYFileBinary (saved_path, *target_cloud);  
-  pcl::toPCLPointCloud2(*target_cloud, cloud_filtered);
+  pcl::toPCLPointCloud2(*pub_cloud, cloud_filtered);
   pcl_conversions::fromPCL(cloud_filtered, output);
   
   while (ros::ok())

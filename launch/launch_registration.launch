@@ -4,8 +4,9 @@
   <param name="source_path" value="/home/hoang/Desktop/ecmr_jacky/jacky_model.ply"/>
   <param name="target_path" value="/home/hoang/Desktop/ecmr_jacky/reconstructed_pointcloud.ply"/>
   <param name="saved_path" value="/home/hoang/Desktop/ecmr_jacky/saved_pointcloud.ply"/>
-  <param name="neighbor_dist" value="0.0001"/>
-  <param name="num_neighbors" value="200"/>
+  <param name="neighbor_dist" value="0.001"/>
+  <param name="num_neighbors" value="20"/>
+  <param name="icp_dist_max" value="0.01"/>
   <rosparam param="translation"> [0.053088295103183365, -0.4379446954842261, 1.2795983286607306]</rosparam>
   <rosparam param="rot_quaternion"> [-0.031651291069665966, 0.04348839456576072, 0.9199327794770922, 0.3883692013474655]</rosparam>
   </node>
