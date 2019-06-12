@@ -18,7 +18,7 @@ find_package(OpenCV 3 REQUIRED
   opencv_calib3d
 	CONFIG
 )
-
+find_package(Boost REQUIRED COMPONENTS system)
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   pcl_conversions
@@ -157,6 +157,8 @@ add_executable(read_rgbd_node src/read_rgbd_node.cpp)
 add_executable(draw_OBB_node src/draw_OBB_node.cpp)
 add_executable(reconstruction_error_node src/reconstruction_error_node.cpp)
 add_executable(registration_node src/registration_node.cpp)
+add_executable(ycb_pose_node src/ycb_pose_node.cpp)
+add_executable(warehouse_pose_node src/warehouse_pose_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -177,6 +179,8 @@ target_link_libraries(read_rgbd_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(draw_OBB_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(reconstruction_error_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(registration_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(ycb_pose_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(warehouse_pose_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 #############
 ## Install ##

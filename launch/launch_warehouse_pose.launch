@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="object_pose" pkg="ros_tools" type="warehouse_pose_node" cwd="node">
+  <param name="data_dir" value="/home/hoang/temp/warehouse-results/0008/images/"/>
+  <param name="model_dir" value="/home/hoang/temp/warehouse-results/object-meshes/"/>
+  <param name="classes_path" value="/home/hoang/temp/warehouse-results/classes.txt"/>
+  <param name="pose_path" value="/home/hoang/Orebro-Study/CODE/Python_tools/warehouse_0008_poses.txt"/>
+  <param name="num_frames" value="1000"/>
+  <param name="fx" value="581.8"/>
+  <param name="fy" value="581.5"/>
+  <param name="cx" value="319.0"/>
+  <param name="cy" value="237.3"/>
+  <param name="depth_factor" value="1000"/>
+  <param name="use_Kalman_Filter" value="true"/>
+  </node>
+</launch>
