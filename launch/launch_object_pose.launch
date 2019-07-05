@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="object_pose" pkg="ros_tools" type="object_pose_node" cwd="node">
+  
+  <!-- <param name="model_dir" value="/media/aass/783de628-b7ff-4217-8c96-7f3764de70d9/RGBD_DATASETS/YCB_Video_Dataset/models/"/>
+  <param name="data_dir" value="/media/aass/783de628-b7ff-4217-8c96-7f3764de70d9/RGBD_DATASETS/YCB_Video_Dataset/data/0048/"/>
+  <param name="classes_path" value="/media/aass/783de628-b7ff-4217-8c96-7f3764de70d9/RGBD_DATASETS/YCB_Video_Dataset/image_sets/classes.txt"/>
+  <param name="pose_path" value="/home/aass/Hoang-Cuong/Seg_SLAM/DenseFusion/ycb_0048_poses.txt"/>
+  <param name="num_frames" value="10000"/>
+  <param name="fx" value="1066.8"/>
+  <param name="fy" value="1067.5"/>
+  <param name="cx" value="313.0"/>
+  <param name="cy" value="241.3"/>
+  <param name="depth_factor" value="10000"/> -->
+
+  <param name="data_dir" value="/media/aass/783de628-b7ff-4217-8c96-7f3764de70d9/Warehouse_Dataset/data/0016/"/>
+  <param name="model_dir" value="/media/aass/783de628-b7ff-4217-8c96-7f3764de70d9/Warehouse_Dataset/models/"/>
+  <param name="classes_path" value="/media/aass/783de628-b7ff-4217-8c96-7f3764de70d9/Warehouse_Dataset/image_sets/classes.txt"/>
+  <param name="pose_path" value="/home/aass/catkin_ws/src/ros_tools/data/warehouse_0016_poses.txt"/>
+  <param name="num_frames" value="10000"/>
+  <param name="fx" value="581.0"/>
+  <param name="fy" value="581.0"/>
+  <param name="cx" value="319.0"/>
+  <param name="cy" value="237.0"/>
+  <param name="depth_factor" value="1000"/>
+
+  </node>
+</launch>
