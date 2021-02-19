@@ -159,7 +159,9 @@ add_executable(reconstruction_error_node src/reconstruction_error_node.cpp)
 add_executable(registration_node src/registration_node.cpp)
 add_executable(ycb_pose_node src/ycb_pose_node.cpp)
 add_executable(warehouse_pose_node src/warehouse_pose_node.cpp)
-add_executable(object_pose_node src/object_pose_node.cpp)
+add_executable(textureness_node src/textureness_node.cpp)
+add_executable(draw_grasp_node src/draw_grasp_node.cpp)
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -182,7 +184,8 @@ target_link_libraries(reconstruction_error_node ${catkin_LIBRARIES} ${OpenCV_LIB
 target_link_libraries(registration_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(ycb_pose_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(warehouse_pose_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
-target_link_libraries(object_pose_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(textureness_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(draw_grasp_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 #############
 ## Install ##

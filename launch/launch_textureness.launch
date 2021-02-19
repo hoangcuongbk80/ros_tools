@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="textureness" pkg="ros_tools" type="textureness_node" cwd="node">
+  <param name="depth_dir" value="/home/hoang/temp/warehouse-results/depth.png"/>
+  <param name="rgb_dir" value="/home/hoang/temp/warehouse-results/rgb.png"/>
+  <param name="saved_depth_dir" value="/home/hoang/temp/warehouse-results/depth_textureness.png"/>
+  <param name="saved_rgb_dir" value="/home/hoang/temp/warehouse-results/rgb_textureness.png"/>
+  </node>
+</launch>

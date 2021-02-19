@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <node name="warehouse_pose" pkg="ros_tools" type="warehouse_pose_node" cwd="node">
+  <node name="object_pose" pkg="ros_tools" type="warehouse_pose_node" cwd="node">
   <param name="data_dir" value="/home/hoang/temp/warehouse-results/0008/images/"/>
   <param name="model_dir" value="/home/hoang/temp/warehouse-results/object-meshes/"/>
   <param name="classes_path" value="/home/hoang/temp/warehouse-results/classes.txt"/>

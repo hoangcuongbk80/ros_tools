@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <launch>
   <node name="read_rgbd" pkg="ros_tools" type="read_rgbd_node" cwd="node">
-  <param name="depth_topsub" value="/camera/depth/image"/>
-  <param name="rgb_topsub" value="/camera/rgb/image_rect_color"/>
+  <param name="depth_topsub" value="/kinect2/hd/image_depth_rect"/>
+  <param name="rgb_topsub" value="/kinect2/hd/image_color_rect"/>
   <param name="cloud_topsub" value="/camera/depth/points"/>
   <param name="cloud_toppub" value="/ros_tools/depth/mypoints"/>
   <param name="image_save" value="true"/>
-  <param name="saved_rgb_dir" value="/home/hoang/Datasets/IROS-2019-dataset/calibration/3_rgb.png"/>
-  <param name="saved_depth_dir" value="/home/hoang/Datasets/IROS-2019-dataset/calibration/3_depth.png"/>
+  <param name="saved_rgb_dir" value="$(find ros_tools)/data/rgb.png"/>
+  <param name="saved_depth_dir" value="$(find ros_tools)/data/depth.png"/>
   </node>
 </launch>

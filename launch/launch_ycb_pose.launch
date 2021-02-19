@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <node name="ycb_pose" pkg="ros_tools" type="ycb_pose_node" cwd="node">
+  <node name="object_pose" pkg="ros_tools" type="ycb_pose_node" cwd="node">
   <param name="data_dir" value="/home/hoang/temp/YCB-Video/0000/"/>
   <param name="model_dir" value="/home/hoang/temp/YCB-Video/models/"/>
   <param name="classes_path" value="/home/hoang/temp/YCB-Video//image_sets/classes.txt"/>

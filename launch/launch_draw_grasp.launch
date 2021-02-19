@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="draw_grasp" pkg="ros_tools" type="draw_grasp_node" cwd="node">
+  <param name="point_cloud_path" value="/home/hoang/Desktop/YCB-models/011_banana/points.ply"/>
+  <param name="grasp_path" value="/home/hoang/OSS/VoteGrasp/graspit/build/grasp.txt"/>
+  <param name="data_dir" value="/home/hoang/datasets_online/office-iros/"/> 
+  </node>
+  
+  <!-- Show in Rviz   -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ros_tools)/launch/grasp.rviz"/>
+  
+</launch>

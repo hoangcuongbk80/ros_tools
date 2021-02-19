@@ -3,9 +3,8 @@
   <node name="draw_OBBs" pkg="ros_tools" type="draw_OBB_node" cwd="node">
   <param name="load_background" value="false"/>
   <param name="background_path" value="/home/hoang/datasets_online/office-iros/background.ply"/>
-  <param name="data_dir" value="/home/hoang/datasets_online/office-iros/"/>
+  <param name="data_dir" value="/home/hoang/Desktop/"/>
   <param name="color_segment" value="false"/>
-  <rosparam param="objects_name"> [Chair_01, Chair_02, Chair_03, Chair_04, Laptop_01, Monitor_01, 
-                              Monitor_02, Monitor_03, Keyboard_01, Keyboard_02, Keyboard_03]</rosparam> 
+  <rosparam param="objects_name"> [011_banana, 044_flat_screwdriver]</rosparam> 
   </node>
 </launch>

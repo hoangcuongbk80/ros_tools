@@ -44,7 +44,7 @@ int OBB_Estimation()
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3f> eigen_solver(covariance, Eigen::ComputeEigenvectors);
     Eigen::Matrix3f eigenVectorsPCA = eigen_solver.eigenvectors();
     eigenVectorsPCA.col(2) = eigenVectorsPCA.col(0).cross(eigenVectorsPCA.col(1));
- 
+    
     // Transform the original cloud to the origin where the principal components correspond to the axes.
     Eigen::Matrix4f projectionTransform(Eigen::Matrix4f::Identity());
     projectionTransform.block<3,3>(0,0) = eigenVectorsPCA.transpose();
@@ -332,11 +332,11 @@ void loadPointCloud(std::string data_dir, std::string object_name)
   std::string data_path = data_dir + object_name + ".ply";
   pcl::io::loadPLYFile<pcl::PointXYZRGB> (data_path, *cloud);
   
-  Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
-  transform_2.translation() << 1, 0.0, 1.0;
-  transform_2.rotate (Eigen::AngleAxisf (-2, Eigen::Vector3f::UnitX()));
-  pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
-  pcl::transformPointCloud (*cloud, *cloud, transform_2);
+  //Eigen::Affine3f transform_2 = Eigen::Affine3f::Identity();
+  //transform_2.translation() << 1, 0.0, 1.0;
+  //transform_2.rotate (Eigen::AngleAxisf (-2, Eigen::Vector3f::UnitX()));
+  //pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud (new pcl::PointCloud<pcl::PointXYZ> ());
+  //pcl::transformPointCloud (*cloud, *cloud, transform_2);
   OBB_Estimation();
 }
 

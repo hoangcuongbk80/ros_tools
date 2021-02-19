@@ -94,11 +94,11 @@ void readrgbdNode::depthCallback (const sensor_msgs::Image::ConstPtr& msg)
     return;
   }
 
-  cv::Mat depth;
-  depth = bridge->image.clone();
-  depth.convertTo(depth, CV_16UC1, 1000.0);
-  cv::imshow("depth",depth);
-  if(image_save) cv::imwrite( saved_depth_dir, depth );
+  cv::Mat depth_img;
+  depth_img = bridge->image.clone();
+  depth_img.convertTo(depth_img, CV_16UC1, 1000.0);
+  cv::imshow("depth", depth_img);
+  if(image_save) cv::imwrite( saved_depth_dir, depth_img );
   cv::waitKey(3);
 }
 
