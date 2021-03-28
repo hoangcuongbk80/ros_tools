@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="color_points" pkg="ros_tools" type="color_points_node" cwd="node">
+  <param name="data_dir" value="/media/hoang/HD-PZFU3/BOP/Sileane/BOP-models/035_power_drill/"/>
+  <rosparam param="objects_name"> [1-points, 2-points, 3-points]</rosparam> 
+  </node>
+</launch>

@@ -30,7 +30,6 @@ find_package(catkin REQUIRED COMPONENTS
   visualization_msgs
 )
 
-
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -161,7 +160,10 @@ add_executable(ycb_pose_node src/ycb_pose_node.cpp)
 add_executable(warehouse_pose_node src/warehouse_pose_node.cpp)
 add_executable(textureness_node src/textureness_node.cpp)
 add_executable(draw_grasp_node src/draw_grasp_node.cpp)
-
+add_executable(bop_node src/bop_node.cpp)
+add_executable(bop_eval_node src/bop_eval_node.cpp)
+add_executable(color_points_node src/color_points_node.cpp)
+add_executable(load_models_node src/load_models_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -186,6 +188,10 @@ target_link_libraries(ycb_pose_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(warehouse_pose_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(textureness_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(draw_grasp_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(bop_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(bop_eval_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(color_points_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(load_models_node ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 #############
 ## Install ##

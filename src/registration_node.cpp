@@ -122,7 +122,7 @@ int main(int argc, char **argv)
   pcl::PCLPointCloud2 cloud_filtered;
   sensor_msgs::PointCloud2 output;
   pub_cloud->header.frame_id = "camera_depth_optical_frame";
-  pcl::io::savePLYFileBinary (saved_path, *target_cloud);  
+  pcl::io::savePLYFileBinary (saved_path, *target_cloud);
   pcl::toPCLPointCloud2(*pub_cloud, cloud_filtered);
   pcl_conversions::fromPCL(cloud_filtered, output);
   

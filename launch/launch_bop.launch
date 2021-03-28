@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="object_pose" pkg="ros_tools" type="bop_node" cwd="node">
+  
+  <param name="method" value="2"/> <!-- 0: depth2points + show gt poses, 1: compute conf-score, 2: add noise and save poses -->
+
+  <param name="data_dir" value="/media/hoang/HD-PZFU3/BOP/Sileane/"/>
+  <rosparam param="list_objects"> [brick, bunny, candlestick, gear, pepper, tless_20, tless_22, tless_29]</rosparam>
+
+  <param name="depth_dir" value="/media/hoang/HD-PZFU3/BOP/Sileane/tless_29/depth/"/>
+  <param name="pc_dir" value="/media/hoang/HD-PZFU3/BOP/Sileane/tless_29/pointcloud/"/>
+  <param name="pose_dir" value="/media/hoang/HD-PZFU3/BOP/Sileane/tless_29/gt-txt/"/>
+  <param name="save_dir" value="/home/hoang/Orebro-Study/Manuscripts/ICCV2021/data/experiment/tless_29/predicted/baseline/"/>
+  <param name="conf_dir" value="/media/hoang/HD-PZFU3/BOP/Sileane/tless_29/conf-score/"/>
+
+  <param name="listname_path" value="/home/hoang/Orebro-Study/Manuscripts/ICCV2021/data/experiment/tless_29/list_names.txt"/>
+  <param name="model_path" value="/media/hoang/HD-PZFU3/BOP/Sileane/tless_29/spare.ply"/>
+
+  <param name="max_r" value="0.06"/> <!-- 0.12 baseline, 0.08 proposed --> <!-- rotation -->
+  <param name="max_l" value="0.06"/> <!-- 0.12 baseline, 0.08 proposed --> <!-- location -->
+  <param name="crowd_ef" value="1.2"/> <!-- 1.2 baseline, 1.1 proposed -->
+  <param name="conf_min" value="0.35"/> <!-- 0.35 baseline, 0.35 proposed -->
+
+  <param name="fx" value="545"/>
+  <param name="fy" value="545"/>
+  <param name="cx" value="316.0"/>
+  <param name="cy" value="244.0"/>
+  <param name="clip_start" value="0.0"/>
+  <param name="clip_end" value="65536"/>
+  <param name="depth_factor" value="65535"/>
+  <rosparam param="camera_location"> [0, 0, 0]</rosparam>
+  <rosparam param="camera_rot"> [1, 0, 0, 0]</rosparam>
+
+  <param name="z_max" value="0.5"/>
+  <param name="z_min" value="-0.1"/>
+  
+  </node>
+   <!-- Show in Rviz   -->
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ros_tools)/launch/bop.rviz"/> -->
+</launch>
